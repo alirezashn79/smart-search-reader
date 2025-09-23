@@ -1,1 +1,45 @@
 @import 'tailwindcss';
+@theme default {
+  --font-vazir: 'Vazir';
+}
+
+@layer base {
+  @font-face {
+    font-family: Vazir;
+    src: url('./assets/fonts/vazir/Vazirmatn-Light.woff2') format('woff');
+    font-display: swap;
+    font-weight: 300;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: Vazir;
+    src: url('./assets/fonts/vazir/Vazirmatn-Regular.woff2') format('woff');
+    font-display: swap;
+    font-weight: 400;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: Vazir;
+    src: url('./assets/fonts/vazir/Vazirmatn-Medium.woff2') format('woff');
+    font-display: swap;
+    font-weight: 500;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: Vazir;
+    src: url('./assets/fonts/vazir/Vazirmatn-SemiBold.woff2') format('woff');
+    font-display: swap;
+    font-weight: 600;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: Vazir;
+    src: url('./assets/fonts/vazir/Vazirmatn-Bold.woff2') format('woff');
+    font-display: swap;
+    font-weight: 700;
+    font-style: normal;
+  }
+  body {
+    @apply font-vazir bg-gray-900 text-gray-100;
+  }
+}
