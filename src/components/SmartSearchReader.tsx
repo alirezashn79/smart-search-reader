@@ -2,15 +2,15 @@ import { useSearch } from '@/hooks/useSearch'
 import { useTextHighlight } from '@/hooks/useTextHighlight'
 import { useCallback, useEffect, useRef } from 'react'
 import SearchInput from './SearchInput'
+import NavigationControls from './NavigationControls'
 import HighlightedText from '@/components/HighlightedText'
 import { SAMPLE_TEXT, SUGGESTIONS } from '@/constants'
 
 export default function SmartSearchReader() {
-  const search = useSearch(SAMPLE_TEXT, 300)
-
   const containerRef = useRef<HTMLDivElement>(null)
   const matchRefs = useRef<(HTMLElement | null)[]>([])
 
+  const search = useSearch(SAMPLE_TEXT, 300)
   const highlightedParts = useTextHighlight(
     SAMPLE_TEXT,
     search.searchResult.matches,
@@ -81,7 +81,7 @@ export default function SmartSearchReader() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-bl from-gray-800 via-stone-950 to-gray-900 p-4">
+    <div className="min-h-screen bg-gradient-to-bl from-gray-800 via-red-950 to-gray-900 p-4">
       <div className="mx-auto max-w-4xl">
         <div className="mb-8 text-center">
           <h1 className="mb-2 bg-gradient-to-r from-cyan-100 via-blue-500 to-indigo-600 bg-clip-text text-3xl font-bold text-transparent">
@@ -98,6 +98,13 @@ export default function SmartSearchReader() {
               onClear={handleClearSearch}
               suggestions={SUGGESTIONS}
               isSearching={search.isSearching}
+            />
+
+            <NavigationControls
+              currentMatch={search.searchResult.currentMatchIndex}
+              totalMatches={search.searchResult.totalMatches}
+              onNext={search.goToNextMatch}
+              onPrev={search.goToPrevMatch}
             />
           </div>
 
