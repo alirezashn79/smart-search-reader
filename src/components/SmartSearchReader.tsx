@@ -1,13 +1,25 @@
 import { useSearch } from '@/hooks/useSearch'
+import { useTextHighlight } from '@/hooks/useTextHighlight'
 import { useCallback, useEffect, useRef } from 'react'
 import SearchInput from './SearchInput'
+import HighlightedText from '@/components/HighlightedText'
 import { SAMPLE_TEXT, SUGGESTIONS } from '@/constants'
 
 export default function SmartSearchReader() {
+  const search = useSearch(SAMPLE_TEXT, 300)
+
   const containerRef = useRef<HTMLDivElement>(null)
   const matchRefs = useRef<(HTMLElement | null)[]>([])
 
-  const search = useSearch(SAMPLE_TEXT, 300)
+  const highlightedParts = useTextHighlight(
+    SAMPLE_TEXT,
+    search.searchResult.matches,
+    search.searchResult.currentMatchIndex
+  )
+
+  const setMatchRef = useCallback((index: number, element: HTMLElement | null) => {
+    matchRefs.current[index] = element
+  }, [])
 
   const smoothScrollTo = useCallback((targetScrollTop: number) => {
     const container = containerRef.current
@@ -106,9 +118,7 @@ export default function SmartSearchReader() {
               scrollBehavior: 'smooth',
             }}
           >
-            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maxime, voluptate dolore.
-            Aliquam iure quos rem obcaecati dolor beatae blanditiis qui officiis eos! Tempore
-            aperiam tempora necessitatibus itaque laudantium placeat nulla.
+            <HighlightedText parts={highlightedParts} onMatchRef={setMatchRef} />
           </div>
         </div>
       </div>
