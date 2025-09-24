@@ -3,6 +3,7 @@ import { SAMPLE_TEXT, SUGGESTIONS } from '@/constants'
 import { useScrollToMatch } from '@/hooks/useScrollToMatch'
 import { useSearch } from '@/hooks/useSearch'
 import { useTextHighlight } from '@/hooks/useTextHighlight'
+import { Github } from 'lucide-react'
 import { useRef } from 'react'
 import NavigationControls from './NavigationControls'
 import SearchInput from './SearchInput'
@@ -34,7 +35,16 @@ export default function SmartSearchReader() {
           <h1 className="mb-2 bg-gradient-to-r from-cyan-100 via-blue-500 to-indigo-600 bg-clip-text text-3xl font-bold text-transparent">
             جستجوی هوشمند
           </h1>
-          <p className="text-gray-300">جستجو و هایلایت هوشمند متن</p>
+          <div className="flex items-center justify-center gap-2">
+            <p className="text-gray-300">جستجو و هایلایت هوشمند متن</p>
+            <a
+              href="https://github.com/alirezashn79/smart-search-reader"
+              target="_blank"
+              className="flex items-center gap-2 rounded-full border-2 border-gray-100 bg-gray-100 p-1 text-xs text-gray-800 hover:bg-gray-800 hover:text-gray-100"
+            >
+              <Github />
+            </a>
+          </div>
         </div>
 
         <div className="mb-6 rounded-xl bg-gray-800 p-6 shadow-lg">
@@ -67,7 +77,7 @@ export default function SmartSearchReader() {
         <div className="overflow-hidden rounded-xl bg-slate-800 shadow-lg">
           <div
             ref={containerRef}
-            className="h-96 overflow-y-auto p-8 text-lg leading-8 text-gray-100"
+            className="h-[470px] overflow-y-auto p-8 text-lg leading-8 text-gray-100 lg:h-96"
             style={{
               scrollBehavior: 'smooth',
             }}

@@ -19,7 +19,7 @@ export function useScrollToMatch(
 
       const startScrollTop = container.scrollTop
       const distance = targetScrollTop - startScrollTop
-      const duration = 500
+      const duration = 300
       const startTime = performance.now()
 
       const animateScroll = (currentTime: number) => {
