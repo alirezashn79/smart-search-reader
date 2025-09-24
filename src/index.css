@@ -42,4 +42,7 @@
   body {
     @apply font-vazir bg-gray-900 text-gray-100;
   }
+  button:disabled {
+    opacity: 0.5;
+  }
 }
