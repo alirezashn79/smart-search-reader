@@ -1,12 +1,68 @@
-import { SAMPLE_TEXT, SUGGESTIONS } from '@/constants'
 import { useSearch } from '@/hooks/useSearch'
-import { useRef } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import SearchInput from './SearchInput'
+import { SAMPLE_TEXT, SUGGESTIONS } from '@/constants'
 
 export default function SmartSearchReader() {
   const containerRef = useRef<HTMLDivElement>(null)
+  const matchRefs = useRef<(HTMLElement | null)[]>([])
 
   const search = useSearch(SAMPLE_TEXT, 300)
+
+  const smoothScrollTo = useCallback((targetScrollTop: number) => {
+    const container = containerRef.current
+    if (!container) return
+
+    const startScrollTop = container.scrollTop
+    const distance = targetScrollTop - startScrollTop
+    const duration = 500
+    const startTime = performance.now()
+
+    const animateScroll = (currentTime: number) => {
+      const elapsed = currentTime - startTime
+      const progress = Math.min(elapsed / duration, 1)
+
+      const easeInOutCubic = (t: number) => {
+        return t < 0.5 ? 4 * t * t * t : (t - 1) * (2 * t - 2) * (2 * t - 2) + 1
+      }
+
+      const easedProgress = easeInOutCubic(progress)
+      container.scrollTop = startScrollTop + distance * easedProgress
+
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll)
+      }
+    }
+
+    requestAnimationFrame(animateScroll)
+  }, [])
+
+  useEffect(() => {
+    if (
+      search.searchResult.matches.length > 0 &&
+      matchRefs.current[search.searchResult.currentMatchIndex]
+    ) {
+      const element = matchRefs.current[search.searchResult.currentMatchIndex]
+
+      if (element && containerRef.current) {
+        const containerRect = containerRef.current.getBoundingClientRect()
+        const elementRect = element.getBoundingClientRect()
+
+        const scrollTop =
+          elementRect.top -
+          containerRect.top +
+          containerRef.current.scrollTop -
+          containerRect.height / 2 +
+          elementRect.height / 2
+
+        smoothScrollTo(scrollTop)
+      }
+    }
+  }, [search.searchResult.currentMatchIndex, search.searchResult.matches, smoothScrollTo])
+
+  useEffect(() => {
+    matchRefs.current = new Array(search.searchResult.matches.length).fill(null)
+  }, [search.searchResult.matches.length])
 
   const handleClearSearch = () => {
     search.setQuery('')
@@ -15,7 +71,6 @@ export default function SmartSearchReader() {
   return (
     <div className="min-h-screen bg-gradient-to-bl from-gray-800 via-stone-950 to-gray-900 p-4">
       <div className="mx-auto max-w-4xl">
-        {/* Header */}
         <div className="mb-8 text-center">
           <h1 className="mb-2 bg-gradient-to-r from-cyan-100 via-blue-500 to-indigo-600 bg-clip-text text-3xl font-bold text-transparent">
             جستجوی هوشمند
@@ -31,7 +86,6 @@ export default function SmartSearchReader() {
               onClear={handleClearSearch}
               suggestions={SUGGESTIONS}
               isSearching={search.isSearching}
-              onNext={search.goToNextMatch}
             />
           </div>
 
@@ -52,9 +106,9 @@ export default function SmartSearchReader() {
               scrollBehavior: 'smooth',
             }}
           >
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo voluptate excepturi
-            doloribus voluptatibus culpa. Voluptates iure fuga consequuntur repudiandae quas, magnam
-            numquam cum est veritatis eligendi animi? Tempore, id dolores?
+            Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maxime, voluptate dolore.
+            Aliquam iure quos rem obcaecati dolor beatae blanditiis qui officiis eos! Tempore
+            aperiam tempora necessitatibus itaque laudantium placeat nulla.
           </div>
         </div>
       </div>
